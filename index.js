@@ -1,5 +1,5 @@
 const express = require('express');
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const cors = require('cors');
 require('dotenv').config()
 const app = express();
@@ -50,6 +50,8 @@ async function run() {
       res.send(result);
     })
 
+
+    //get category wise books
     app.get('/api/v1/newBook/:category', async(req, res) => {
       const category = req.params.category
       const query = {category: category};
@@ -60,9 +62,17 @@ async function run() {
 
       };
 
-      const result = await newBookCollection.findOne(query, options);
+      const result = await newBookCollection.find(query, options).toArray();
       res.send(result)
 
+    });
+
+    app.get('/api/v1/details/:id', async(req, res)=> {
+      const id = req.params.id
+      const query = {_id: new ObjectId(id)}
+      
+      const result = await newBookCollection.findOne(query);
+      res.send(result)
     })
 
     
