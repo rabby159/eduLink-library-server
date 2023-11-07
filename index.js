@@ -67,11 +67,25 @@ async function run() {
 
     });
 
+    //get api for each book details route
     app.get('/api/v1/details/:id', async(req, res)=> {
       const id = req.params.id
       const query = {_id: new ObjectId(id)}
       
       const result = await newBookCollection.findOne(query);
+      res.send(result)
+    })
+
+    //get api for read route
+    app.get('/api/v1/describe/:id', async(req, res) => {
+      const id = req.params.id;
+      const query = {_id: new ObjectId(id)}
+
+      const options = {
+        projection: { description: 1, bName: 1, image: 1 }
+      }
+
+      const result = await newBookCollection.findOne(query, options)
       res.send(result)
     })
 
