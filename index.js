@@ -29,20 +29,25 @@ async function run() {
     const categoriesCollection = client.db('eduLinkDB').collection('categories')
     const newBookCollection = client.db('eduLinkDB').collection('newBook')
 
-
+    //get categories
     app.get('/api/v1/categories', async(req, res) => {
       const result = await categoriesCollection.find().toArray();
       res.send(result);
     });
 
-    app.post('/api/v1/addBook', async(req, res) => {
+    //post new book details
+    app.post('/api/v1/adsNewBook', async(req, res) => {
       const newBook = req.body;
       // console.log(newBook)
 
       const result = await newBookCollection.insertOne(newBook);
       res.send(result);
-      
+    })
 
+    //get all books
+    app.get('/api/v1/newBook', async(req, res) => {
+      const result = await newBookCollection.find().toArray();
+      res.send(result);
     })
 
     
