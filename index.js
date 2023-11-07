@@ -36,7 +36,7 @@ async function run() {
     });
 
     //post new book details
-    app.post('/api/v1/adsNewBook', async(req, res) => {
+    app.post('/api/v1/addBook', async(req, res) => {
       const newBook = req.body;
       // console.log(newBook)
 
@@ -48,6 +48,21 @@ async function run() {
     app.get('/api/v1/newBook', async(req, res) => {
       const result = await newBookCollection.find().toArray();
       res.send(result);
+    })
+
+    app.get('/api/v1/newBook/:category', async(req, res) => {
+      const category = req.params.category
+      const query = {category: category};
+
+      const options = {
+        
+        projection: { image: 1, bName: 1, aName: 1, category: 1, rating: 1 }
+
+      };
+
+      const result = await newBookCollection.findOne(query, options);
+      res.send(result)
+
     })
 
     
