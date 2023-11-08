@@ -87,6 +87,34 @@ async function run() {
 
       const result = await newBookCollection.findOne(query, options)
       res.send(result)
+    });
+
+    //update books details
+    app.get('/api/v1/update/:id', async(req, res) => {
+      const id = req.params.id;
+      const query = {_id: new ObjectId(id)}
+      const result = await newBookCollection.findOne(query)
+      res.send(result)
+    })
+
+    app.put('/api/v1/update/:id', async(req, res) => {
+      const id = req.params.id;
+      const filter = {_id: new ObjectId(id)}
+      const options = {upsert: true}
+      const updateBook = req.body
+      const updateBookDetails = {
+        $set: {
+          image:updateBook.image,
+          bName:updateBook.bName,
+          aName:updateBook.aName,
+          category:updateBook.category,
+          rating:updateBook.rating
+
+        }
+      }
+      const result = await newBookCollection.updateOne(filter, updateBookDetails, options)
+      res.send(result)
+      
     })
 
     
