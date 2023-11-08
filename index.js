@@ -1,12 +1,20 @@
 const express = require('express');
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const cors = require('cors');
+const jwt = require('jsonwebtoken')
 require('dotenv').config()
 const app = express();
 const port = process.env.PORT || 5000;
 
 //middleware
-app.use(cors());
+app.use(cors({
+  origin: [
+    // 'http://localhost:5173',
+    'https://edulink-firebase.firebaseapp.com',
+    'https://edulink-firebase.web.app'
+  ],
+  credentials: true
+}));
 app.use(express.json());
 
 
@@ -111,10 +119,25 @@ async function run() {
           rating:updateBook.rating
 
         }
-      }
+      };
       const result = await newBookCollection.updateOne(filter, updateBookDetails, options)
       res.send(result)
       
+    });
+
+    //jwt
+    app.post('/api/v1/jwt', (req,res) => {
+      const user = req.body;
+      console.log('user token', user)
+      const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '1h'})
+
+      res.cookie('token', token, {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'none'
+      })
+      .send({success: true})
+
     })
 
     
